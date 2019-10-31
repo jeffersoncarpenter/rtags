@@ -780,7 +780,7 @@ CommandLineParser::ParseStatus RClient::parse(size_t argc, char **argv)
                     return { String::format<1024>("Can't parse range %s", value.constData()), CommandLineParser::Parse_Error };
                 }
             } else {
-                std::regex rx2("^(.*):([0-9]+):([0-9]+):?(@[A-Za-z,]+)?", std::regex_constants::basic);
+                std::regex rx2("^(.*):([0-9]+):([0-9]+):?(@[A-Za-z,]+)?", std::regex_constants::extended);
                 if (std::regex_match(value.constData(), match, rx2)) {
                     path.assign(value.constData(), match.length(1));
                     line = atoi(value.constData() + match.position(2));
