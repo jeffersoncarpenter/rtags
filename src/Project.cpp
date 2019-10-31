@@ -2952,3 +2952,30 @@ Set<Symbol> Project::findDeadFunctions(uint32_t fileId)
     }
     return ret;
 }
+
+std::shared_ptr<FileMap<String, Set<Location> > > Project::openSymbolNames(uint32_t fileId, String *err)
+{
+    assert(mFileMapScope);
+    return mFileMapScope->openFileMap<String, Set<Location> >(SymbolNames, fileId, mFileMapScope->symbolNames, err);
+}
+std::shared_ptr<FileMap<Location, Symbol> > Project::openSymbols(uint32_t fileId, String *err)
+{
+    assert(mFileMapScope);
+    return mFileMapScope->openFileMap<Location, Symbol>(Symbols, fileId, mFileMapScope->symbols, err);
+}
+std::shared_ptr<FileMap<String, Set<Location> > > Project::openTargets(uint32_t fileId, String *err)
+{
+    assert(mFileMapScope);
+    return mFileMapScope->openFileMap<String, Set<Location> >(Targets, fileId, mFileMapScope->targets, err);
+}
+std::shared_ptr<FileMap<String, Set<Location> > > Project::openUsrs(uint32_t fileId, String *err)
+{
+    assert(mFileMapScope);
+    return mFileMapScope->openFileMap<String, Set<Location> >(Usrs, fileId, mFileMapScope->usrs, err);
+}
+
+std::shared_ptr<FileMap<uint32_t, Token> > Project::openTokens(uint32_t fileId, String *err)
+{
+    assert(mFileMapScope);
+    return mFileMapScope->openFileMap<uint32_t, Token>(Tokens, fileId, mFileMapScope->tokens, err);
+}

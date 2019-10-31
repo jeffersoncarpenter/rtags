@@ -89,32 +89,12 @@ public:
         }
         return nullptr;
     }
-    std::shared_ptr<FileMap<String, Set<Location> > > openSymbolNames(uint32_t fileId, String *err = nullptr)
-    {
-        assert(mFileMapScope);
-        return mFileMapScope->openFileMap<String, Set<Location> >(SymbolNames, fileId, mFileMapScope->symbolNames, err);
-    }
-    std::shared_ptr<FileMap<Location, Symbol> > openSymbols(uint32_t fileId, String *err = nullptr)
-    {
-        assert(mFileMapScope);
-        return mFileMapScope->openFileMap<Location, Symbol>(Symbols, fileId, mFileMapScope->symbols, err);
-    }
-    std::shared_ptr<FileMap<String, Set<Location> > > openTargets(uint32_t fileId, String *err = nullptr)
-    {
-        assert(mFileMapScope);
-        return mFileMapScope->openFileMap<String, Set<Location> >(Targets, fileId, mFileMapScope->targets, err);
-    }
-    std::shared_ptr<FileMap<String, Set<Location> > > openUsrs(uint32_t fileId, String *err = nullptr)
-    {
-        assert(mFileMapScope);
-        return mFileMapScope->openFileMap<String, Set<Location> >(Usrs, fileId, mFileMapScope->usrs, err);
-    }
+    std::shared_ptr<FileMap<String, Set<Location> > > openSymbolNames(uint32_t fileId, String *err = nullptr);
+    std::shared_ptr<FileMap<Location, Symbol> > openSymbols(uint32_t fileId, String *err = nullptr);
+    std::shared_ptr<FileMap<String, Set<Location> > > openTargets(uint32_t fileId, String *err = nullptr);
+    std::shared_ptr<FileMap<String, Set<Location> > > openUsrs(uint32_t fileId, String *err = nullptr);
 
-    std::shared_ptr<FileMap<uint32_t, Token> > openTokens(uint32_t fileId, String *err = nullptr)
-    {
-        assert(mFileMapScope);
-        return mFileMapScope->openFileMap<uint32_t, Token>(Tokens, fileId, mFileMapScope->tokens, err);
-    }
+    std::shared_ptr<FileMap<uint32_t, Token> > openTokens(uint32_t fileId, String *err = nullptr);
 
 
     enum DependencyMode {
