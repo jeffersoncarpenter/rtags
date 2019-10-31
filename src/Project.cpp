@@ -2136,25 +2136,25 @@ bool Project::validate(uint32_t fileId, ValidateMode mode, String *err) const
         String error;
         const uint32_t opts = fileMapOptions();
         {
-            path = sourceFilePath(fileId, fileMapName(SymbolNames));
+            path = sourceFilePath(fileId, fileMapName(FileMapType::SymbolNames));
             FileMap<String, Set<Location> > fileMap;
             if (!fileMap.load(path, opts, &error))
                 goto error;
         }
         {
-            path = sourceFilePath(fileId, fileMapName(Symbols));
+            path = sourceFilePath(fileId, fileMapName(FileMapType::Symbols));
             FileMap<Location, Symbol> fileMap;
             if (!fileMap.load(path, opts, &error))
                 goto error;
         }
         {
-            path = sourceFilePath(fileId, fileMapName(Targets));
+            path = sourceFilePath(fileId, fileMapName(FileMapType::Targets));
             FileMap<String, Set<Location> > fileMap;
             if (!fileMap.load(path, opts, &error))
                 goto error;
         }
         {
-            path = sourceFilePath(fileId, fileMapName(Usrs));
+            path = sourceFilePath(fileId, fileMapName(FileMapType::Usrs));
             FileMap<String, Set<Location> > fileMap;
             if (!fileMap.load(path, opts, &error))
                 goto error;
@@ -2166,7 +2166,7 @@ bool Project::validate(uint32_t fileId, ValidateMode mode, String *err) const
         return false;
     } else {
         assert(mode == StatOnly);
-        for (auto type : { Symbols, SymbolNames, Targets, Usrs }) {
+        for (auto type : { FileMapType::Symbols, FileMapType::SymbolNames, FileMapType::Targets, FileMapType::Usrs }) {
             const Path p = sourceFilePath(fileId, fileMapName(type));
             if (!p.isFile()) {
                 Log(err) << "Error during validation:" << Location::path(fileId) << p << "doesn't exist";
@@ -2953,29 +2953,41 @@ Set<Symbol> Project::findDeadFunctions(uint32_t fileId)
     return ret;
 }
 
+const char *Project::fileMapName(FileMapType type)
+{
+    switch (type) {
+    case FileMapType::Symbols: return "symbols";
+    case FileMapType::SymbolNames: return "symnames";
+    case FileMapType::Targets: return "targets";
+    case FileMapType::Usrs: return "usrs";
+    case FileMapType::Tokens: return "tokens";
+    }
+    return nullptr;
+}
+
 std::shared_ptr<FileMap<String, Set<Location> > > Project::openSymbolNames(uint32_t fileId, String *err)
 {
     assert(mFileMapScope);
-    return mFileMapScope->openFileMap<String, Set<Location> >(SymbolNames, fileId, mFileMapScope->symbolNames, err);
+    return mFileMapScope->openFileMap<String, Set<Location> >(FileMapType::SymbolNames, fileId, mFileMapScope->symbolNames, err);
 }
 std::shared_ptr<FileMap<Location, Symbol> > Project::openSymbols(uint32_t fileId, String *err)
 {
     assert(mFileMapScope);
-    return mFileMapScope->openFileMap<Location, Symbol>(Symbols, fileId, mFileMapScope->symbols, err);
+    return mFileMapScope->openFileMap<Location, Symbol>(FileMapType::Symbols, fileId, mFileMapScope->symbols, err);
 }
 std::shared_ptr<FileMap<String, Set<Location> > > Project::openTargets(uint32_t fileId, String *err)
 {
     assert(mFileMapScope);
-    return mFileMapScope->openFileMap<String, Set<Location> >(Targets, fileId, mFileMapScope->targets, err);
+    return mFileMapScope->openFileMap<String, Set<Location> >(FileMapType::Targets, fileId, mFileMapScope->targets, err);
 }
 std::shared_ptr<FileMap<String, Set<Location> > > Project::openUsrs(uint32_t fileId, String *err)
 {
     assert(mFileMapScope);
-    return mFileMapScope->openFileMap<String, Set<Location> >(Usrs, fileId, mFileMapScope->usrs, err);
+    return mFileMapScope->openFileMap<String, Set<Location> >(FileMapType::Usrs, fileId, mFileMapScope->usrs, err);
 }
 
 std::shared_ptr<FileMap<uint32_t, Token> > Project::openTokens(uint32_t fileId, String *err)
 {
     assert(mFileMapScope);
-    return mFileMapScope->openFileMap<uint32_t, Token>(Tokens, fileId, mFileMapScope->tokens, err);
+    return mFileMapScope->openFileMap<uint32_t, Token>(FileMapType::Tokens, fileId, mFileMapScope->tokens, err);
 }

@@ -71,24 +71,15 @@ public:
     Path projectDataDir() const { return mProjectDataDir; }
     bool match(const Match &match, bool *indexed = nullptr) const;
 
-    enum FileMapType {
+    enum class FileMapType {
         Symbols,
         SymbolNames,
         Targets,
         Usrs,
         Tokens
     };
-    static const char *fileMapName(FileMapType type)
-    {
-        switch (type) {
-        case Symbols: return "symbols";
-        case SymbolNames: return "symnames";
-        case Targets: return "targets";
-        case Usrs: return "usrs";
-        case Tokens: return "tokens";
-        }
-        return nullptr;
-    }
+    static const char *fileMapName(FileMapType type);
+
     std::shared_ptr<FileMap<String, Set<Location> > > openSymbolNames(uint32_t fileId, String *err = nullptr);
     std::shared_ptr<FileMap<Location, Symbol> > openSymbols(uint32_t fileId, String *err = nullptr);
     std::shared_ptr<FileMap<String, Set<Location> > > openTargets(uint32_t fileId, String *err = nullptr);
@@ -363,23 +354,23 @@ private:
                     assert(e);
                     entryMap.remove(e->key);
                     switch (e->key.type) {
-                    case SymbolNames:
+                    case FileMapType::SymbolNames:
                         assert(symbolNames.contains(e->key.fileId));
                         symbolNames.remove(e->key.fileId);
                         break;
-                    case Symbols:
+                    case FileMapType::Symbols:
                         assert(symbols.contains(e->key.fileId));
                         symbols.remove(e->key.fileId);
                         break;
-                    case Targets:
+                    case FileMapType::Targets:
                         assert(targets.contains(e->key.fileId));
                         targets.remove(e->key.fileId);
                         break;
-                    case Usrs:
+                    case FileMapType::Usrs:
                         assert(usrs.contains(e->key.fileId));
                         usrs.remove(e->key.fileId);
                         break;
-                    case Tokens:
+                    case FileMapType::Tokens:
                         assert(tokens.contains(e->key.fileId));
                         tokens.remove(e->key.fileId);
                         break;
